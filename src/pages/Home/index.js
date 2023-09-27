@@ -11,6 +11,7 @@ import Icon from "../../components/Icon";
 import Form from "../../containers/Form";
 import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
+import ModalEvent from "../../containers/ModalEvent";
 
 const Page = () => {
   const {data} = useData()
@@ -119,15 +120,20 @@ const Page = () => {
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
         {/* verif de presence title & cover avant EventCard */}
-        {last?.title && last?.cover &&
-          (<EventCard
-            imageSrc={last.cover}
-            title={last.title}
-            date={new Date(last.date)}
-            small
-            label="boom"
-          />)
-        }
+        {/* ajout de la modale */}
+        {last?.title && last?.cover && 
+          <Modal Content={<ModalEvent event={last} />}>
+            {({ setIsOpened }) => (
+              <EventCard
+                onClick={() => setIsOpened(true)}
+                imageSrc={last.cover}
+                title={last.title}
+                date={new Date(last.date)}
+                small
+                label="boom"
+              />
+            )}
+          </Modal>}
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>
