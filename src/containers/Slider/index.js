@@ -7,18 +7,33 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
+  const [indexRadio, setIndexRadio] = useState(0); // création d'un state pour le radio
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
     new Date(evtA.date) > new Date(evtB.date) ? -1 : 1 // inversion de l'ordre de tri (>)
   );
-  const nextCard = () => {
-    setTimeout(
-      () => setIndex(index < byDateDesc.length -1 ? index + 1 : 0), // prise en compte de l'index 0 sur .length (-1)
-      5000
-    );
+  const nextCard = () => {  
+    // console.log(byDateDesc, data);
+    const newIndex = index < byDateDesc.length -1 ? index + 1 : 0; // prise en compte de l'index 0 sur .length (-1)
+    setIndex(newIndex);
+    setIndexRadio(newIndex);
   };
-  useEffect(() => {
-    nextCard();
-  });
+
+  // mise en place d'un useEffect pour attente de rendu fini pour declanchement avec dependances
+  useEffect(() => {   
+    const timer = setTimeout(nextCard, 5000);
+    return () => clearTimeout(timer); // arret du timer au clic ou en auto pour eviter progression timer sans prise en compte du clic
+  }, [byDateDesc,index]);
+
+  // synchro de l index et de l index radio au changement d indexRadio
+  useEffect(()=>{
+    setIndex(indexRadio);
+  },[indexRadio]);
+
+  // // TEST d'actualisation de synchro de l index du slides et du radio
+  // useEffect(()=>{
+  //   console.log("radioIndex:", indexRadio, "index:", index);
+  // },[index]);
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
@@ -45,7 +60,9 @@ const Slider = () => {
                   key={`radio: ${radioIdx+1}`} // création d'une Key unique
                   type="radio"
                   name="radio-button"
-                  checked={index === radioIdx} // activation suivi du radio
+                  // création des conditions au check quand clic
+                  checked={indexRadio === radioIdx} // activation suivi du radio
+                  onChange={() => setIndexRadio(radioIdx)}
                 />
               ))}
             </div>
