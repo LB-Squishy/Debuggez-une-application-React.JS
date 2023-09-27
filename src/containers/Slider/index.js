@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useData } from "../../contexts/DataContext";
 import { getMonth } from "../../helpers/Date";
 
@@ -22,9 +22,9 @@ const Slider = () => {
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
-        <>
+        // ajout de Fragement pour assignation d'une key unique à la racine de la boucle
+        <Fragment key={`slider: ${idx+1}`}>
           <div
-            key={event.title}
             className={`SlideCard SlideCard--${
               index === idx ? "display" : "hide"
             }`}
@@ -42,7 +42,7 @@ const Slider = () => {
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
-                  key={`${event.id}`}
+                  key={`radio: ${radioIdx+1}`} // création d'une Key unique
                   type="radio"
                   name="radio-button"
                   checked={index === radioIdx} // activation suivi du radio
@@ -50,7 +50,7 @@ const Slider = () => {
               ))}
             </div>
           </div>
-        </>
+        </Fragment>
       ))}
     </div>
   );
