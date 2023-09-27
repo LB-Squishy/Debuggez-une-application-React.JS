@@ -14,10 +14,14 @@ const EventList = () => {
   const [type, setType] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const filteredEvents = (
-    (!type
-      ? data?.events
-      : data?.events) || []
-  ).filter((event, index) => {
+    (data?.events) || []
+  ).filter((event) => {
+    // filtrage: garde la modale si type n'est pas défini ou si event.type correspond au type défini
+    if (!type || event.type === type) {
+      return true
+    }
+    return false;
+  }).filter((_, index) => {
     if (
       (currentPage - 1) * PER_PAGE <= index &&
       PER_PAGE * currentPage > index
@@ -26,9 +30,13 @@ const EventList = () => {
     }
     return false;
   });
+  // console log pour traquer le type et le data.event
+  // console.log("type:", type, "data.events:", data?.events, "filteredEvents:", filteredEvents)
   const changeType = (evtType) => {
     setCurrentPage(1);
     setType(evtType);
+    // console log pour traquer evtType
+    // console.log("evtType:", evtType)
   };
   const pageNumber = Math.floor((filteredEvents?.length || 0) / PER_PAGE) + 1;
   const typeList = new Set(data?.events.map((event) => event.type));
