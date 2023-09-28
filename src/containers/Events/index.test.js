@@ -49,7 +49,7 @@ describe("When Events is created", () => {
   });
   describe("and an error occured", () => {
     it("an error message is displayed", async () => {
-      api.loadData = jest.fn().mockRejectedValue(new Error);
+      api.loadData = jest.fn().mockRejectedValue(new Error("An error occured"));
       render(
         <DataProvider>
           <Events />
